@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     color: const Color(0xFF4d2963),
                     child: const Text(
-                      'PLACEHOLDER HEADER TEXT',
+                      'ESSENTIAL RANGE NOW AVAILABLE - SHOP NOW',
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
@@ -193,7 +193,7 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         const Text(
-                          'Placeholder Hero Title',
+                          'ESSENTIAL RANGE',
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -203,7 +203,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         const Text(
-                          "This is placeholder text for the hero section.",
+                          "SHOP OUR ESSENTIAL RANGE OF PRODUCTS, PERFECT FOR STUDENTS AND EVERYDAY USE.",
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -241,7 +241,7 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     const Text(
-                      'PRODUCTS SECTION',
+                      'ESSENTIAL RANGE ',
                       style: TextStyle(
                         fontSize: 20,
                         color: Colors.black,
@@ -249,39 +249,68 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 48),
-                    GridView.count(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisCount:
-                          MediaQuery.of(context).size.width > 600 ? 2 : 1,
-                      crossAxisSpacing: 24,
-                      mainAxisSpacing: 48,
-                      children: const [
-                        ProductCard(
-                          title: 'Placeholder Product 1',
-                          price: '£10.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 2',
-                          price: '£15.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 3',
-                          price: '£20.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                        ProductCard(
-                          title: 'Placeholder Product 4',
-                          price: '£25.00',
-                          imageUrl:
-                              'https://shop.upsu.net/cdn/shop/files/PortsmouthCityMagnet1_1024x1024@2x.jpg?v=1752230282',
-                        ),
-                      ],
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final crossAxisCount =
+                            MediaQuery.of(context).size.width > 600 ? 2 : 1;
+                        return Column(
+                          children: [
+                            GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount: crossAxisCount,
+                              crossAxisSpacing: 24,
+                              mainAxisSpacing: 48,
+                              children: const [
+                                ProductCard(
+                                  title: 'Essential Hoodie',
+                                  price: '£15.00',
+                                  imageUrl:
+                                      'https://chatgpt.com/backend-api/estuary/content?id=file_00000000458071f491a5d10e5f87caf9&ts=490201&p=fs&cid=1&sig=964cc81f14a8bc48e69ccee78787fa2ac9b980c8534e44249951f87bc1b35c95&v=0',
+                                ),
+                                ProductCard(
+                                  title: 'Essential T-Shirt',
+                                  price: '£10.00',
+                                  imageUrl:
+                                      'https://chatgpt.com/s/m_692f9b5c4d848191a2380c07a5bd9b4a/file_000000001520720ab7925f1931b1e005?ts=490202&p=fs&cid=1&sig=1adb17e409cbe1f03293d4b9904abdce3f95a2a1042b20013f136da7df44edeb&v=0',
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 24),
+                            const Text(
+                              'SIGNATURE RANGE',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            GridView.count(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              crossAxisCount: crossAxisCount,
+                              crossAxisSpacing: 24,
+                              mainAxisSpacing: 48,
+                              children: const [
+                                ProductCard(
+                                  title: 'Signature Hoodie',
+                                  price: '£20.00',
+                                  imageUrl:
+                                      'https://chatgpt.com/backend-api/estuary/content?id=file_00000000561871f49df05b5373a39fa8&ts=490202&p=fs&cid=1&sig=6df7a96f659dfc3764283e069342b1405a87cc478607ac1a3e8c39cebd11d1e1&v=0',
+                                ),
+                                ProductCard(
+                                  title: 'Signature T-Shirt',
+                                  price: '£15.00',
+                                  imageUrl:
+                                      'https://chatgpt.com/backend-api/estuary/content?id=file_0000000051d471f4a06a1fa3eccd50d8&ts=490202&p=fs&cid=1&sig=65a409149fecda6b5f26f8783aab8236b284ef527d7b2d08e090a96093ecf299&v=0',
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
