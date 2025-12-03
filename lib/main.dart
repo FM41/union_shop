@@ -260,7 +260,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.7),
+                          color: Colors.black.withOpacity(0.7),
                         ),
                       ),
                     ),
@@ -423,19 +423,31 @@ class ProductCard extends StatelessWidget {
   final String title;
   final String price;
   final String imageUrl;
+  final String? description;
 
   const ProductCard({
     super.key,
     required this.title,
     required this.price,
     required this.imageUrl,
+    this.description,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/product');
+        Navigator.pushNamed(
+          context,
+          '/product',
+          arguments: {
+            'title': title,
+            'price': price,
+            'imageUrl': imageUrl,
+            'description': description ??
+                'Soft, comfortable, 50% cotton and 50% polyester. Available in various sizes. Perfect for everyday wear and showcasing your support for the union.',
+          },
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
