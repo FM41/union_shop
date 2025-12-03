@@ -24,6 +24,9 @@ class UnionShopApp extends StatelessWidget {
       routes: {
         '/product': (context) => const ProductPage(),
         '/about': (context) => const AboutUsPage(),
+        '/collections': (context) => const CollectionsPage(),
+        '/collections/essential': (context) => const EssentialCollectionPage(),
+        '/collections/signature': (context) => const SignatureCollectionPage(),
       },
     );
   }
@@ -139,6 +142,29 @@ class HomeScreen extends StatelessWidget {
                                     decoration:
                                         ModalRoute.of(context)?.settings.name ==
                                                 '/about'
+                                            ? TextDecoration.underline
+                                            : TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/collections');
+                                },
+                                child: Text(
+                                  'Collections',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        ModalRoute.of(context)?.settings.name ==
+                                                '/collections'
+                                            ? const Color(0xFF4d2963)
+                                            : Colors.grey,
+                                    decoration:
+                                        ModalRoute.of(context)?.settings.name ==
+                                                '/collections'
                                             ? TextDecoration.underline
                                             : TextDecoration.none,
                                   ),
@@ -378,7 +404,7 @@ class HomeScreen extends StatelessWidget {
               color: Colors.grey[50],
               padding: const EdgeInsets.all(24),
               child: const Text(
-                'Placeholder Footer',
+                '© 2024 Union Shop. All rights reserved.',
                 style: TextStyle(
                   color: Colors.grey,
                   fontSize: 16,
@@ -468,6 +494,175 @@ class AboutUsPage extends StatelessWidget {
             style: TextStyle(fontSize: 18, color: Colors.black),
             textAlign: TextAlign.center,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class CollectionsPage extends StatelessWidget {
+  const CollectionsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Collections'),
+        backgroundColor: const Color(0xFF4d2963),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/collections/essential');
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 1,
+                      child: Image.network(
+                        'https://chatgpt.com/backend-api/estuary/content?id=file_00000000458071f491a5d10e5f87caf9&ts=490201&p=fs&cid=1&sig=964cc81f14a8bc48e69ccee78787fa2ac9b980c8534e44249951f87bc1b35c95&v=0',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Container(
+                      color: Colors.black.withOpacity(0.5),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                        child: Text(
+                          'ESSENTIAL',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 32),
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/collections/signature');
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 1,
+                      child: Image.network(
+                        'https://chatgpt.com/backend-api/estuary/content?id=file_00000000561871f49df05b5373a39fa8&ts=490202&p=fs&cid=1&sig=6df7a96f659dfc3764283e069342b1405a87cc478607ac1a3e8c39cebd11d1e1&v=0',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Container(
+                      color: Colors.black.withOpacity(0.5),
+                      child: const Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                        child: Text(
+                          'SIGNATURE',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class EssentialCollectionPage extends StatelessWidget {
+  const EssentialCollectionPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final products = const [
+      ProductCard(
+        title: 'Essential Hoodie',
+        price: '£15.00',
+        imageUrl:
+            'https://chatgpt.com/backend-api/estuary/content?id=file_00000000458071f491a5d10e5f87caf9&ts=490201&p=fs&cid=1&sig=964cc81f14a8bc48e69ccee78787fa2ac9b980c8534e44249951f87bc1b35c95&v=0',
+      ),
+      ProductCard(
+        title: 'Essential T-Shirt',
+        price: '£10.00',
+        imageUrl:
+            'https://chatgpt.com/s/m_692f9b5c4d848191a2380c07a5bd9b4a/file_000000001520720ab7925f1931b1e005?ts=490202&p=fs&cid=1&sig=1adb17e409cbe1f03293d4b9904abdce3f95a2a1042b20013f136da7df44edeb&v=0',
+      ),
+    ];
+    final crossAxisCount = MediaQuery.of(context).size.width > 600 ? 2 : 1;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Essential Collection'),
+        backgroundColor: const Color(0xFF4d2963),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: GridView.count(
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 24,
+          mainAxisSpacing: 48,
+          children: products,
+        ),
+      ),
+    );
+  }
+}
+
+class SignatureCollectionPage extends StatelessWidget {
+  const SignatureCollectionPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final products = const [
+      ProductCard(
+        title: 'Signature Hoodie',
+        price: '£20.00',
+        imageUrl:
+            'https://chatgpt.com/backend-api/estuary/content?id=file_00000000561871f49df05b5373a39fa8&ts=490202&p=fs&cid=1&sig=6df7a96f659dfc3764283e069342b1405a87cc478607ac1a3e8c39cebd11d1e1&v=0',
+      ),
+      ProductCard(
+        title: 'Signature T-Shirt',
+        price: '£15.00',
+        imageUrl:
+            'https://chatgpt.com/backend-api/estuary/content?id=file_0000000051d471f4a06a1fa3eccd50d8&ts=490202&p=fs&cid=1&sig=65a409149fecda6b5f26f8783aab8236b284ef527d7b2d08e090a96093ecf299&v=0',
+      ),
+    ];
+    final crossAxisCount = MediaQuery.of(context).size.width > 600 ? 2 : 1;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Signature Collection'),
+        backgroundColor: const Color(0xFF4d2963),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: GridView.count(
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 24,
+          mainAxisSpacing: 48,
+          children: products,
         ),
       ),
     );
