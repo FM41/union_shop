@@ -21,7 +21,10 @@ class UnionShopApp extends StatelessWidget {
       initialRoute: '/',
       // When navigating to '/product', build and return the ProductPage
       // In your browser, try this link: http://localhost:49856/#/product
-      routes: {'/product': (context) => const ProductPage()},
+      routes: {
+        '/product': (context) => const ProductPage(),
+        '/about': (context) => const AboutUsPage(),
+      },
     );
   }
 }
@@ -90,6 +93,58 @@ class HomeScreen extends StatelessWidget {
                                 );
                               },
                             ),
+                          ),
+                          const Spacer(),
+                          // Add navigation links next to the main header
+                          Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  navigateToHome(context);
+                                },
+                                child: Text(
+                                  'Home',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        ModalRoute.of(context)?.settings.name ==
+                                                '/'
+                                            ? const Color(0xFF4d2963)
+                                            : Colors.grey,
+                                    decoration:
+                                        ModalRoute.of(context)?.settings.name ==
+                                                '/'
+                                            ? TextDecoration.underline
+                                            : TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/about');
+                                },
+                                child: Text(
+                                  'About Us',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color:
+                                        ModalRoute.of(context)?.settings.name ==
+                                                '/about'
+                                            ? const Color.fromARGB(
+                                                255, 255, 255, 255)
+                                            : Colors.grey,
+                                    decoration:
+                                        ModalRoute.of(context)?.settings.name ==
+                                                '/about'
+                                            ? TextDecoration.underline
+                                            : TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                           const Spacer(),
                           ConstrainedBox(
@@ -390,6 +445,30 @@ class ProductCard extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class AboutUsPage extends StatelessWidget {
+  const AboutUsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('About Us'),
+        backgroundColor: const Color(0xFF4d2963),
+      ),
+      body: const Center(
+        child: Padding(
+          padding: EdgeInsets.all(32.0),
+          child: Text(
+            'Union Shop is dedicated to providing essential and signature products for students. Our mission is to offer quality, affordability, and style for everyday campus life.',
+            style: TextStyle(fontSize: 18, color: Colors.black),
+            textAlign: TextAlign.center,
+          ),
+        ),
       ),
     );
   }
