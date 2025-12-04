@@ -27,6 +27,7 @@ class UnionShopApp extends StatelessWidget {
         '/collections': (context) => const CollectionsPage(),
         '/collections/essential': (context) => const EssentialCollectionPage(),
         '/collections/signature': (context) => const SignatureCollectionPage(),
+        '/sale': (context) => const SalePage(),
       },
     );
   }
@@ -167,6 +168,21 @@ class HomeScreen extends StatelessWidget {
                                                 '/collections'
                                             ? TextDecoration.underline
                                             : TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/sale');
+                                },
+                                child: const Text(
+                                  'SALE!!',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                    decoration: TextDecoration.underline,
                                   ),
                                 ),
                               ),
@@ -675,6 +691,74 @@ class SignatureCollectionPage extends StatelessWidget {
           crossAxisSpacing: 24,
           mainAxisSpacing: 48,
           children: products,
+        ),
+      ),
+    );
+  }
+}
+
+class SalePage extends StatelessWidget {
+  const SalePage({super.key});
+
+  double discountedPrice(String price) {
+    // Remove currency symbol and parse
+    final value = double.tryParse(price.replaceAll(RegExp(r'[^\d.]'), '')) ?? 0;
+    final discounted = value * 0.6;
+    return discounted;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final products = [
+      {
+        'title': 'Essential Hoodie',
+        'price': '£15.00',
+        'imageUrl':
+            'https://chatgpt.com/backend-api/estuary/content?id=file_00000000458071f491a5d10e5f87caf9&ts=490201&p=fs&cid=1&sig=964cc81f14a8bc48e69ccee78787fa2ac9b980c8534e44249951f87bc1b35c95&v=0',
+      },
+      {
+        'title': 'Essential T-Shirt',
+        'price': '£10.00',
+        'imageUrl':
+            'https://chatgpt.com/s/m_692f9b5c4d848191a2380c07a5bd9b4a/file_000000001520720ab7925f1931b1e005?ts=490202&p=fs&cid=1&sig=1adb17e409cbe1f03293d4b9904abdce3f95a2a1042b20013f136da7df44edeb&v=0',
+      },
+      {
+        'title': 'Signature Hoodie',
+        'price': '£20.00',
+        'imageUrl':
+            'https://chatgpt.com/backend-api/estuary/content?id=file_00000000561871f49df05b5373a39fa8&ts=490202&p=fs&cid=1&sig=6df7a96f659dfc3764283e069342b1405a87cc478607ac1a3e8c39cebd11d1e1&v=0',
+      },
+      {
+        'title': 'Signature T-Shirt',
+        'price': '£15.00',
+        'imageUrl':
+            'https://chatgpt.com/backend-api/estuary/content?id=file_0000000051d471f4a06a1fa3eccd50d8&ts=490202&p=fs&cid=1&sig=65a409149fecda6b5f26f8783aab8236b284ef527d7b2d08e090a96093ecf299&v=0',
+      },
+    ];
+
+    final crossAxisCount = MediaQuery.of(context).size.width > 600 ? 2 : 1;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('SALE!! 40% OFF'),
+        backgroundColor: Colors.red,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: GridView.count(
+          crossAxisCount: crossAxisCount,
+          crossAxisSpacing: 24,
+          mainAxisSpacing: 48,
+          children: products.map((product) {
+            final originalPrice = product['price']!;
+            final salePrice = discountedPrice(originalPrice);
+            return ProductCard(
+              title: product['title']!,
+              price: '£${salePrice.toStringAsFixed(2)} (was $originalPrice)',
+              imageUrl: product['imageUrl']!,
+              description: 'Now 40% off!',
+            );
+          }).toList(),
         ),
       ),
     );
