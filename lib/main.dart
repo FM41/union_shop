@@ -29,6 +29,7 @@ class UnionShopApp extends StatelessWidget {
         '/collections/signature': (context) => const SignatureCollectionPage(),
         '/sale': (context) => const SalePage(),
         '/signin': (context) => const SignInPage(), // <-- Add this line
+        '/all-products': (context) => const AllProductsPage(), // <-- Add this line
       },
     );
   }
@@ -209,7 +210,8 @@ class HomeScreen extends StatelessWidget {
                                   onPressed: placeholderCallbackForButtons,
                                 ),
                                 IconButton(
-                                  icon: const Icon(Icons.person), // <-- Add icon
+                                  icon:
+                                      const Icon(Icons.person), // <-- Add icon
                                   onPressed: () {
                                     Navigator.pushNamed(context, '/signin');
                                   },
@@ -304,7 +306,9 @@ class HomeScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 32),
                         ElevatedButton(
-                          onPressed: placeholderCallbackForButtons,
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/all-products');
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4d2963),
                             foregroundColor: Colors.white,
@@ -794,7 +798,8 @@ class SignInPage extends StatelessWidget {
               onPressed: () {
                 // Handle sign in logic here
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Signed in as ${emailController.text}')),
+                  SnackBar(
+                      content: Text('Signed in as ${emailController.text}')),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -802,6 +807,141 @@ class SignInPage extends StatelessWidget {
                 foregroundColor: Colors.white,
               ),
               child: const Text('Sign In'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class AllProductsPage extends StatefulWidget {
+  const AllProductsPage({super.key});
+
+  @override
+  State<AllProductsPage> createState() => _AllProductsPageState();
+}
+
+class _AllProductsPageState extends State<AllProductsPage> {
+  String filterBy = 'All';
+  String sortBy = 'Default';
+
+  final List<Map<String, String>> products = [
+    {
+      'title': 'Essential Hoodie',
+      'price': '£15.00',
+      'imageUrl':
+          'https://chatgpt.com/backend-api/estuary/content?id=file_00000000458071f491a5d10e5f87caf9&ts=490201&p=fs&cid=1&sig=964cc81f14a8bc48e69ccee78787fa2ac9b980c8534e44249951f87bc1b35c95&v=0',
+      'type': 'Essential',
+    },
+    {
+      'title': 'Essential T-Shirt',
+      'price': '£10.00',
+      'imageUrl':
+          'https://chatgpt.com/s/m_692f9b5c4d848191a2380c07a5bd9b4a/file_000000001520720ab7925f1931b1e005?ts=490202&p=fs&cid=1&sig=1adb17e409cbe1f03293d4b9904abdce3f95a2a1042b20013f136da7df44edeb&v=0',
+      'type': 'Essential',
+    },
+    {
+      'title': 'Signature Hoodie',
+      'price': '£20.00',
+      'imageUrl':
+          'https://chatgpt.com/backend-api/estuary/content?id=file_00000000561871f49df05b5373a39fa8&ts=490202&p=fs&cid=1&sig=6df7a96f659dfc3764283e069342b1405a87cc478607ac1a3e8c39cebd11d1e1&v=0',
+      'type': 'Signature',
+    },
+    {
+      'title': 'Signature T-Shirt',
+      'price': '£15.00',
+      'imageUrl':
+          'https://chatgpt.com/backend-api/estuary/content?id=file_0000000051d471f4a06a1fa3eccd50d8&ts=490202&p=fs&cid=1&sig=65a409149fecda6b5f26f8783aab8236b284ef527d7b2d08e090a96093ecf299&v=0',
+      'type': 'Signature',
+    },
+  ];
+
+  List<Map<String, String>> get filteredProducts {
+    var list = products;
+    if (filterBy != 'All') {
+      list = list.where((p) => p['type'] == filterBy).toList();
+    }
+    if (sortBy == 'Price: Low to High') {
+      list.sort((a, b) =>
+          double.parse(a['price']!.replaceAll(RegExp(r'[^\d.]'), ''))
+              .compareTo(double.parse(b['price']!.replaceAll(RegExp(r'[^\d.]'), ''))));
+    } else if (sortBy == 'Price: High to Low') {
+      list.sort((a, b) =>
+          double.parse(b['price']!.replaceAll(RegExp(r'[^\d.]'), ''))
+              .compareTo(double.parse(a['price']!.replaceAll(RegExp(r'[^\d.]'), ''))));
+    }
+    return list;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final crossAxisCount = MediaQuery.of(context).size.width > 600 ? 2 : 1;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('All Products'),
+        backgroundColor: const Color(0xFF4d2963),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                const Text('Filter by:', style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 8),
+                DropdownButton<String>(
+                  value: filterBy,
+                  items: ['All', 'Essential', 'Signature']
+                      .map((type) => DropdownMenuItem(
+                            value: type,
+                            child: Text(type),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      filterBy = value!;
+                    });
+                  },
+                ),
+                const SizedBox(width: 32),
+                const Text('Sort by:', style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 8),
+                DropdownButton<String>(
+                  value: sortBy,
+                  items: [
+                    'Default',
+                    'Price: Low to High',
+                    'Price: High to Low',
+                  ]
+                      .map((sort) => DropdownMenuItem(
+                            value: sort,
+                            child: Text(sort),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      sortBy = value!;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            Expanded(
+              child: GridView.count(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 24,
+                mainAxisSpacing: 48,
+                children: filteredProducts
+                    .map((product) => ProductCard(
+                          title: product['title']!,
+                          price: product['price']!,
+                          imageUrl: product['imageUrl']!,
+                          description: 'Soft, comfortable, 50% cotton and 50% polyester. Available in various sizes.',
+                        ))
+                    .toList(),
+              ),
             ),
           ],
         ),
