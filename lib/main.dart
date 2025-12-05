@@ -5,6 +5,9 @@ void main() {
   runApp(const UnionShopApp());
 }
 
+// Add a simple cart model (global for demo purposes)
+List<Map<String, String>> cartItems = [];
+
 class UnionShopApp extends StatelessWidget {
   const UnionShopApp({super.key});
 
@@ -30,6 +33,7 @@ class UnionShopApp extends StatelessWidget {
         '/sale': (context) => const SalePage(),
         '/signin': (context) => const SignInPage(), // <-- Add this line
         '/all-products': (context) => const AllProductsPage(), // <-- Add this line
+        '/cart': (context) => const CartPage(), // <-- Add this line
       },
     );
   }
@@ -227,7 +231,9 @@ class HomeScreen extends StatelessWidget {
                                     minWidth: 32,
                                     minHeight: 32,
                                   ),
-                                  onPressed: placeholderCallbackForButtons,
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/cart');
+                                  },
                                 ),
                                 IconButton(
                                   icon: const Icon(
@@ -494,6 +500,7 @@ class ProductCard extends StatelessWidget {
                 price,
                 style: const TextStyle(fontSize: 13, color: Colors.grey),
               ),
+              // --- Removed the Add to Cart button here ---
             ],
           ),
         ],
@@ -941,6 +948,201 @@ class _AllProductsPageState extends State<AllProductsPage> {
                           description: 'Soft, comfortable, 50% cotton and 50% polyester. Available in various sizes.',
                         ))
                     .toList(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class CartPage extends StatefulWidget {
+  const CartPage({super.key});
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  void removeFromCart(int index) {
+    setState(() {
+      cartItems.removeAt(index);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Your Cart'),
+        backgroundColor: const Color(0xFF4d2963),
+      ),
+      body: cartItems.isEmpty
+          ? const Center(
+              child: Text(
+                'Your cart is empty.',
+                style: TextStyle(fontSize: 18),
+              ),
+            )
+          : ListView.builder(
+              padding: const EdgeInsets.all(32.0),
+              itemCount: cartItems.length,
+              itemBuilder: (context, index) {
+                final item = cartItems[index];
+                return Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    leading: Image.network(
+                      item['imageUrl']!,
+                      width: 60,
+                      height: 60,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.image_not_supported),
+                    ),
+                    title: Text(item['title']!),
+                    subtitle: Text(item['price']!),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => removeFromCart(index),
+                    ),
+                  ),
+                );
+              },
+            ),
+    );
+  }
+}
+
+class ProductPage extends StatefulWidget {
+  const ProductPage({super.key});
+
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  String selectedSize = 'M';
+  int selectedAmount = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    final title = args?['title'] ?? 'Product';
+    final price = args?['price'] ?? '';
+    final imageUrl = args?['imageUrl'] ?? '';
+    final description = args?['description'] ?? '';
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: const Color(0xFF4d2963),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Image.network(
+                imageUrl,
+                height: 200,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    height: 200,
+                    child: const Center(
+                      child: Icon(Icons.image_not_supported, color: Colors.grey),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              price,
+              style: const TextStyle(fontSize: 20, color: Colors.grey),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              description,
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                const Text('Size:', style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 16),
+                DropdownButton<String>(
+                  value: selectedSize,
+                  items: ['XS', 'S', 'M', 'L', 'XL']
+                      .map((size) => DropdownMenuItem(
+                            value: size,
+                            child: Text(size),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedSize = value!;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                const Text('Amount:', style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 16),
+                DropdownButton<int>(
+                  value: selectedAmount,
+                  items: List.generate(10, (i) => i + 1)
+                      .map((amount) => DropdownMenuItem(
+                            value: amount,
+                            child: Text(amount.toString()),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      selectedAmount = value!;
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  for (int i = 0; i < selectedAmount; i++) {
+                    cartItems.add({
+                      'title': title,
+                      'price': price,
+                      'imageUrl': imageUrl,
+                      'size': selectedSize,
+                    });
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                          'Added $selectedAmount x $title (Size: $selectedSize) to cart!'),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF4d2963),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                ),
+                child: const Text('Add to Cart'),
               ),
             ),
           ],
