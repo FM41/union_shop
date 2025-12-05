@@ -28,6 +28,7 @@ class UnionShopApp extends StatelessWidget {
         '/collections/essential': (context) => const EssentialCollectionPage(),
         '/collections/signature': (context) => const SignatureCollectionPage(),
         '/sale': (context) => const SalePage(),
+        '/signin': (context) => const SignInPage(), // <-- Add this line
       },
     );
   }
@@ -208,17 +209,10 @@ class HomeScreen extends StatelessWidget {
                                   onPressed: placeholderCallbackForButtons,
                                 ),
                                 IconButton(
-                                  icon: const Icon(
-                                    Icons.person_outline,
-                                    size: 18,
-                                    color: Colors.grey,
-                                  ),
-                                  padding: const EdgeInsets.all(8),
-                                  constraints: const BoxConstraints(
-                                    minWidth: 32,
-                                    minHeight: 32,
-                                  ),
-                                  onPressed: placeholderCallbackForButtons,
+                                  icon: const Icon(Icons.person), // <-- Add icon
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, '/signin');
+                                  },
                                 ),
                                 IconButton(
                                   icon: const Icon(
@@ -759,6 +753,57 @@ class SalePage extends StatelessWidget {
               description: 'Now 40% off!',
             );
           }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final emailController = TextEditingController();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sign In'),
+        backgroundColor: const Color(0xFF4d2963),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Enter your email to sign in:',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 24),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                // Handle sign in logic here
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Signed in as ${emailController.text}')),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4d2963),
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Sign In'),
+            ),
+          ],
         ),
       ),
     );
